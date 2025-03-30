@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VertiGrow - Smart Hydroponic Farming</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Poppins:wght@600&display=swap');
+        
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #27ae60;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --transition: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #000;
+        }
+        
+        .slides-container {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 1s var(--transition);
+            will-change: transform;
+            overflow: hidden;
+        }
+        
+        /* Title Slide */
+        #title-slide {
+            z-index: 4;
+        }
+        
+        #title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.stantec.com/content/dam/stantec/images/ideas/blogs/023/indoor-farm-adobestock-358626162.jpg.transform/small/image.20230530.jpeg') center/cover;
+            filter: brightness(0.7) contrast(1.1);
+            z-index: -2;
+        }
+        
+        #title-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.85) 0%, rgba(39, 174, 96, 0.85) 100%);
+            z-index: -1;
+        }
+        
+        .title-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            animation: fadeInUp 1.2s var(--transition) both;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+        
+        .slogan {
+            font-size: 2.2rem;
+            font-style: italic;
+            margin-bottom: 4rem;
+            color: rgba(255,255,255,0.9);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Content Slides */
+        .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+            transition: transform 1.2s var(--transition), filter 1.2s var(--transition);
+        }
+        
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: -1;
+        }
+        
+        .slide-content {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 3.5rem;
+            border-radius: 20px;
+            max-width: 850px;
+            margin: 0 2rem;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.8s var(--transition) 0.3s;
+        }
+        
+        .active .slide-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 2.5rem;
+            line-height: 1.2;
+        }
+        
+        p {
+            font-size: 1.35rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            color: var(--dark);
+        }
+        
+        .highlight {
+            color: var(--primary-dark);
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--transition);
+        }
+        
+        .highlight:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1.1rem 2.2rem;
+            font-size: 1.25rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+            transition: all 0.4s var(--transition);
+            overflow: hidden;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
+            z-index: -1;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--transition);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+        
+        .nav-btn:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .nav-btn i {
+            margin-left: 0.7rem;
+            transition: transform 0.4s var(--transition);
+        }
+        
+        .nav-btn:hover i {
+            transform: translateY(2px);
+        }
+        
+        /* Water-Smart Farming Slide */
+        #water .slide-bg {
+            background-image: url('https://images.unsplash.com/photo-1605000797499-95a51c5269ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        }
+        
+        /* Food Security Slide */
+        #food .slide-bg {
+            background-image: url('https://images.unsplash.com/photo-1598880940080-ff9a29891b85?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        }
+        
+        /* Healthy Nutrition Slide */
+        #health .slide-bg {
+            background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        }
+        
+        /* Slide states */
+        .slide.active {
+            transform: translateY(0);
+        }
+        
+        .slide.active .slide-bg {
+            transform: scale(1.03);
+            filter: brightness(1);
+        }
+        
+        .slide.prev {
+            transform: translateY(-100%);
+        }
+        
+        .slide.next {
+            transform: translateY(100%);
+        }
+        
+        .slide.next .slide-bg,
+        .slide.prev .slide-bg {
+            transform: scale(1.1);
+            filter: brightness(0.7);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 3.5rem;
+            }
+            
+            .slogan {
+                font-size: 1.8rem;
+                margin-bottom: 3rem;
+            }
+            
+            .slide-content {
+                padding: 2.5rem;
+                margin: 0 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="slides-container">
+        <!-- Title Slide -->
+        <section id="title-slide" class="slide active">
+            <div class="title-content">
+                <div class="logo">VertiGrow</div>
+                <div class="slogan">M3a Vertigrow lkhir mojod</div>
+                <button class="nav-btn" onclick="nextSlide()">
+                    Discover More <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Water-Smart Farming -->
+        <section id="water" class="slide">
+            <div class="slide-bg"></div>
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h1>Water-Smart Farming</h1>
+                <p>Water scarcity is a growing challenge for Moroccan agriculture. Traditional farming consumes precious water, but <span class="highlight">VertiGrow</span> offers a game-changing solution. With <span class="highlight">hydroponic vertical farming, we use 90% less water</span> and grow pesticide-free, nutrient-rich crops in less space, all year round. Our innovative systems recycle water efficiently, ensuring sustainable food production while protecting Morocco’s water resources. VertiGrow is not just smarter farming—it’s the key to a self-sufficient, sustainable future for Morocco. <span class="highlight">With VertiGrow, الخير موجود. 🌱💧</span></p>
+                <button class="nav-btn" onclick="nextSlide()">
+                    Continue <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Year-Round Food Security -->
+        <section id="food" class="slide">
+            <div class="slide-bg"></div>
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h1>More Agriculture production</h1>
+                <p>Vertical farming is revolutionizing food production by growing crops in stacked layers, using significantly less space while maximizing output. This method allows farmers to grow up to <span class="highlight">10 times more crops per square meter</span> compared to traditional farming. With the ability to cultivate food in urban areas, vertical farming also reduces transportation costs and carbon emissions. Additionally, vertical farming can yield crops <span class="highlight">3-5 times faster</span> than conventional methods, thanks to its controlled environment that optimizes plant growth.</p>
+                <button class="nav-btn" onclick="nextSlide()">
+                    Continue <i class="fas fa-arrow-down"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- Pure, Healthy Nutrition -->
+        <section id="health" class="slide">
+            <div class="slide-bg"></div>
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h1>Healthier, Cleaner Crops for a Healthier Morocco</h1>
+                <p>At <span class="highlight">VertiGrow</span> ,we believe that what you eat should be pure and nourishing. Thanks to our <span class="highlight">tightly controlled hydroponic farming environment</span> Crops can be grown <span class="highlight">100% pesticide and chemical-free!</span> Without the need for harmful pesticides or synthetic chemicals, we grow food in its most natural state <span class="highlight">fresh, nutritious, and safe for you and your family</span> For Moroccans who care about their health and the environment, VertiGrow offers a cleaner, healthier alternative to traditional farming. Choose food that’s as good for your body as it is for Morocco’s future. 🌿🍅🌍</p>
+                <button class="nav-btn" onclick="goToSlide(0)" style="background-color: var(--dark); box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);">
+                    <i class="fas fa-redo"></i> Back to Start
+                </button>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentIndex = 0;
+        let isAnimating = false;
+        
+        // Initialize
+        goToSlide(0);
+        
+        function goToSlide(index) {
+            if (isAnimating) return;
+            isAnimating = true;
+            
+            // Update current index
+            currentIndex = index;
+            
+            // Update slides
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev', 'next');
+                
+                if (i === index) {
+                    slide.classList.add('active');
+                } else if (i < index) {
+                    slide.classList.add('prev');
+                } else {
+                    slide.classList.add('next');
+                }
+            });
+            
+            // Reset animation lock
+            setTimeout(() => {
+                isAnimating = false;
+            }, 1000);
+        }
+        
+        function nextSlide() {
+            const nextIndex = (currentIndex + 1) % slides.length;
+            goToSlide(nextIndex);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowUp') {
+                const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+                goToSlide(prevIndex);
+            }
+        });
+        
+        // Touch/swipe support
+        let touchStartY = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', (e) => {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+                    goToSlide(prevIndex);
+                }
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
